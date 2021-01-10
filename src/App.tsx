@@ -1,24 +1,30 @@
-import React from 'react';
+import React, { useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import axios from 'axios';
 
 function App() {
+  const [id, setId] = useState<Number>(0);
+  const [name, setName] = useState<string>('');
+
+  const handleClick = async () => {
+    try {
+      const result = await axios.get('http://localhost:8080/list');
+      setId(result.data.id);
+      setName(result.data.name);
+    } catch {
+      console.log('error')
+    }
+  };
+
   return (
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
       </header>
+      <button data-test="list-button" onClick={handleClick}>list</button>
+      <p data-test="id-text">id:{id}</p>
+      <p data-test="name-text">name:{name}</p>
     </div>
   );
 }
